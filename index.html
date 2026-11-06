@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="启明平台学生画像目标、项目竞赛、成绩查询与结业认证流程的本地交互评审原型。">
+  <title>启明平台 · 学生端交互原型</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="practice.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="results.css">
+  <script defer src="model.js"></script>
+  <script defer src="practice-model.js"></script>
+  <script defer src="results-model.js"></script>
+  <script defer src="results-drafts.js"></script>
+  <script defer src="certification-model.js"></script>
+  <script defer src="ui.js"></script>
+  <script defer src="growth-model.js"></script>
+  <script defer src="practice-view.js"></script>
+  <script defer src="certification-view.js"></script>
+  <script defer src="results-view.js"></script>
+  <script defer src="app.js"></script>
+  <script defer src="navigation.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到页面内容</a>
+  <div class="review-bar">
+    <div><span class="review-dot" aria-hidden="true"></span><strong>学生端交互原型</strong><span class="review-note">演示数据 · 本地保存 · 尚未连接真实服务</span></div>
+    <details class="review-tools">
+      <summary>评审选项</summary>
+      <div class="review-menu">
+        <a class="button" href="#/demo/certification" data-route="workbench">认证工作台（演示）</a>
+        <label for="scenario-select">演示场景</label>
+        <select id="scenario-select"><option value="returning">已有资料与目标</option><option value="new">首次使用</option></select>
+        <button type="button" id="reset-scenario">重置到所选场景</button>
+        <button type="button" id="fail-save">下一次保存模拟失败</button>
+        <button type="button" id="fail-load">模拟页面加载失败</button>
+        <button type="button" id="toggle-template">模拟首个模板停用</button>
+        <small>证书暂停、恢复、撤销及复核换发统一在认证工作台办理，需填写原因并保留历史。</small>
+        <hr>
+        <label for="review-application">报名结果模拟（评审专用）</label>
+        <select id="review-application"><option value="">暂无待审核报名</option></select>
+        <label for="review-reason">拒绝原因</label>
+        <input id="review-reason" type="text" value="请补充与本机会相关的实践经历。" maxlength="500">
+        <div class="button-row"><button type="button" id="review-approve" disabled>模拟通过</button><button type="button" id="review-reject" disabled>模拟拒绝</button></div>
+        <hr>
+        <label for="review-skill">技能验证模拟（评审专用）</label>
+        <select id="review-skill"><option value="">暂无待审核技能</option></select>
+        <label for="review-skill-note">技能处理意见 / 退回原因</label>
+        <textarea id="review-skill-note" maxlength="1000" placeholder="通过说明或退回原因（退回必填）"></textarea>
+        <div class="button-row"><button type="button" id="review-skill-approve" disabled>模拟验证通过</button><button type="button" id="review-skill-reject" disabled>模拟退回材料</button></div>
+        <small>演示时点：2026-10-20 12:00。不是实际审核权限。</small>
+        <p id="review-status" role="status" aria-live="polite">这里的操作只影响本地演示。</p>
+      </div>
+    </details>
+  </div>
+  <div class="app-shell">
+    <aside id="student-navigation" class="sidebar" aria-label="学生端导航">
+      <a href="#/student/home" class="brand" data-route="home" aria-label="启明学生成长平台首页"><span class="brand-mark" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" fill="none"><path d="M6 10C14 9 21 12 26 17V41C20 36 13 34 6 35V10Z" fill="#F0B429"/><path d="M30 17C35 12 42 9 50 10V35C43 34 36 36 30 41V17Z" fill="#FFD875"/><path d="M7 41C15 40 22 43 28 47C34 43 41 40 49 41" stroke="#28384A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="brand-copy"><span class="brand-name">启明</span><span class="brand-sub">学生成长平台</span></span></a>
+      <div class="workspace-label"><span>学生工作台</span><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="3" y="12" width="5" height="5" rx="1"/><rect x="12" y="12" width="5" height="5" rx="1"/></svg></div>
+      <nav aria-label="一级栏目">
+        <a href="#/student/home" data-route="home" data-section="home" class="nav-item" aria-label="学生首页" aria-describedby="nav-home-description"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/></svg><span class="nav-copy"><strong>学生首页</strong><small id="nav-home-description">概览与今日待办</small></span><svg class="nav-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg></a>
+        <a href="#/student/profile" data-route="profile" data-section="growth" class="nav-item" aria-label="画像与目标" aria-describedby="nav-growth-description"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span class="nav-copy"><strong>画像与目标</strong><small id="nav-growth-description">认识自己，明确方向</small></span><svg class="nav-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg></a>
+        <a href="#/student/opportunities" data-route="opportunities" data-section="practice" class="nav-item" aria-label="科创实践" aria-describedby="nav-practice-description"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4M3 12h18M10 12v3h4v-3"/></svg><span class="nav-copy"><strong>科创实践</strong><small id="nav-practice-description">发现机会，参与实践</small></span><svg class="nav-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg></a>
+        <a href="#/student/grades" data-route="grades" data-section="results" class="nav-item" aria-label="成绩与结业" aria-describedby="nav-results-description"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 9-5 9 5-9 5-9-5ZM6 10v7c4 3 8 3 12 0v-7M21 8v8"/></svg><span class="nav-copy"><strong>成绩与结业</strong><small id="nav-results-description">成绩、结业与证书</small></span><svg class="nav-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg></a>
+        <a href="#/student/archive" data-route="archive" data-section="archive" class="nav-item" aria-label="成果档案 待建设" aria-describedby="nav-archive-description"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v11H3ZM2 4h20v5H2ZM9 13h6"/></svg><span class="nav-copy"><strong>成果档案</strong><small id="nav-archive-description">留存成果，追溯证据</small></span><span class="nav-status">待建设</span></a>
+      </nav>
+      <button type="button" class="assistant-launcher" aria-label="唤出 AI 助学助手" aria-haspopup="dialog" aria-controls="assistant-dialog" aria-expanded="false" aria-describedby="assistant-launcher-status">
+        <span class="assistant-launcher-top">
+          <span class="assistant-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17c7 0 12 3 17 8 5-5 10-8 17-8v20c-7 0-12 2-17 6-5-4-10-6-17-6Z"/><path d="M24 25v18M12 24c3 .5 5 1.5 7 3M29 27c2-1.5 4-2.5 7-3M24 4l2.5 6.5L33 13l-6.5 2.5L24 22l-2.5-6.5L15 13l6.5-2.5Z"/></svg></span>
+          <span class="assistant-launcher-title"><strong>启明 AI</strong><span>你的助学助手</span></span>
+          <span id="assistant-launcher-status" class="assistant-status">即将上线</span>
+        </span>
+        <span class="assistant-launcher-description">让每一个问题，都成为进步的起点。</span>
+        <span class="assistant-launcher-action"><span>唤出助学助手</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></span>
+      </button>
+      <div class="sidebar-footer"><span class="avatar small" aria-hidden="true">林</span><div>林同学<small>学生账号</small></div><span class="sidebar-account-tag">演示空间</span></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><button type="button" class="navigation-toggle" aria-expanded="false" aria-controls="student-navigation"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>导航</span></button><div class="topbar-location"><span class="topbar-title">学生成长工作台</span><div id="breadcrumb">学生工作台 / 学生首页</div></div><div class="identity"><span class="status-dot" aria-hidden="true"></span>演示空间<span class="avatar" aria-hidden="true">林</span></div></header>
+      <nav id="section-navigation" class="section-navigation" aria-label="栏目内导航" hidden></nav>
+      <main id="main-content" tabindex="-1" aria-label="页面内容"><div class="loading">正在读取演示数据…</div></main>
+      <footer class="workspace-footer"><span>启明 · 从目标出发，让实践留下成长证据</span><span>交互原型 v0.8.0</span></footer>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="skill-dialog" aria-labelledby="skill-dialog-title"></dialog>
+  <dialog id="goal-manager-dialog" aria-labelledby="goal-manager-title"></dialog>
+  <dialog id="goal-dialog" aria-labelledby="goal-dialog-title"></dialog>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title"></dialog>
+  <dialog id="source-dialog" aria-labelledby="source-title"></dialog>
+  <dialog id="application-dialog" aria-labelledby="application-title"></dialog>
+  <dialog id="assistant-dialog" class="assistant-panel" aria-labelledby="assistant-title" aria-describedby="assistant-availability">
+    <header class="assistant-panel-header">
+      <div><h2 id="assistant-title">启明 AI <span>助学助手</span></h2><p>与你一起，把知识学明白。</p></div>
+      <button type="button" class="assistant-close" aria-label="关闭助学助手" autofocus><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button>
+    </header>
+    <div class="assistant-panel-content">
+      <div class="assistant-intro">
+        <div class="assistant-emblem" aria-hidden="true"><span class="assistant-mark"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17c7 0 12 3 17 8 5-5 10-8 17-8v20c-7 0-12 2-17 6-5-4-10-6-17-6Z"/><path d="M24 25v18M12 24c3 .5 5 1.5 7 3M29 27c2-1.5 4-2.5 7-3M24 4l2.5 6.5L33 13l-6.5 2.5L24 22l-2.5-6.5L15 13l6.5-2.5Z"/></svg></span></div>
+        <span class="assistant-status">即将上线</span>
+        <h3>你的学习搭子，正在准备中</h3>
+        <p id="assistant-availability">AI 助手尚未接入，暂时无法对话。<br>未来将在这里，陪你解疑、规划与实践。</p>
+      </div>
+      <section class="assistant-capabilities" aria-labelledby="assistant-capabilities-title">
+        <h3 id="assistant-capabilities-title">期待与你一起</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v13H9l-5 4Z"/><path d="M9 8a3 3 0 0 1 6 0c0 2-3 2-3 4M12 14v.1"/></svg><div><h4>理解课程知识</h4><p>梳理知识要点，拆解学习中的疑问</p></div></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M7 5h8a4 4 0 0 1 0 8H9a4 4 0 0 0 0 8h5M5 7v3"/></svg><div><h4>规划学习节奏</h4><p>围绕课程与目标，找到下一步方向</p></div></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="14" rx="2"/><path d="M8 7V3h8v4M4 12h16M10 12v3h4v-3"/></svg><div><h4>探索项目实践</h4><p>理清项目思路，让所学走向应用</p></div></li>
+        </ul>
+        <p class="assistant-capabilities-note">以上为规划能力，将在接入后逐步开放。</p>
+      </section>
+    </div>
+    <footer class="assistant-panel-footer">
+      <label for="assistant-prompt">向助学助手提问</label>
+      <div class="assistant-composer"><textarea id="assistant-prompt" rows="2" placeholder="等助手准备好，就从你的第一个问题开始。" aria-describedby="assistant-availability" disabled></textarea><span class="assistant-composer-bottom"><span>对话功能即将开放</span><button type="button" disabled aria-label="发送消息（暂未开放）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></span></div>
+    </footer>
+  </dialog>
+  <dialog id="results-dialog" aria-labelledby="results-dialog-title"></dialog>
+  <noscript>此交互原型需要启用 JavaScript。页面说明可在同目录 README.md 中查看。</noscript>
+</body>
+</html>
